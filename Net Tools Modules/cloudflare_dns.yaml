@@ -1,0 +1,101 @@
+- name: Create a test.my.com A record to point to 127.0.0.1
+  cloudflare_dns:
+    zone: my.com
+    record: test
+    type: A
+    value: 127.0.0.1
+    account_email: test@example.com
+    account_api_token: dummyapitoken
+  register: record
+
+- name: Create a my.com CNAME record to example.com
+  cloudflare_dns:
+    zone: my.com
+    type: CNAME
+    value: example.com
+    account_email: test@example.com
+    account_api_token: dummyapitoken
+    state: present
+
+- name: Change its TTL
+  cloudflare_dns:
+    zone: my.com
+    type: CNAME
+    value: example.com
+    ttl: 600
+    account_email: test@example.com
+    account_api_token: dummyapitoken
+    state: present
+
+- name: Delete the record
+  cloudflare_dns:
+    zone: my.com
+    type: CNAME
+    value: example.com
+    account_email: test@example.com
+    account_api_token: dummyapitoken
+    state: absent
+
+- name: create a my.com CNAME record to example.com and proxy through Cloudflare's network
+  cloudflare_dns:
+    zone: my.com
+    type: CNAME
+    value: example.com
+    proxied: yes
+    account_email: test@example.com
+    account_api_token: dummyapitoken
+    state: present
+
+# This deletes all other TXT records named "test.my.com"
+- name: Create TXT record "test.my.com" with value "unique value"
+  cloudflare_dns:
+    domain: my.com
+    record: test
+    type: TXT
+    value: unique value
+    solo: true
+    account_email: test@example.com
+    account_api_token: dummyapitoken
+    state: present
+
+- name: Create an SRV record _foo._tcp.my.com
+  cloudflare_dns:
+    domain: my.com
+    service: foo
+    proto: tcp
+    port: 3500
+    priority: 10
+    weight: 20
+    type: SRV
+    value: fooserver.my.com
+
+- name: Create a SSHFP record login.example.com
+  cloudflare_dns:
+    zone: example.com
+    record: login
+    type: SSHFP
+    algorithm: 4
+    hash_type: 2
+    value: 9dc1d6742696d2f51ca1f1a78b3d16a840f7d111eb9454239e70db31363f33e1
+
+- name: Create a TLSA record _25._tcp.mail.example.com
+  cloudflare_dns:
+    zone: example.com
+    record: mail
+    port: 25
+    proto: tcp
+    type: TLSA
+    cert_usage: 3
+    selector: 1
+    hash_type: 1
+    value: 6b76d034492b493e15a7376fccd08e63befdad0edab8e442562f532338364bf3
+
+- name: Create a DS record for subdomain.example.com
+  cloudflare_dns:
+    zone: example.com
+    record: subdomain
+    type: DS
+    key_tag: 5464
+    algorithm: 8
+    hash_type: 2
+    value: B4EB5AC4467D2DFB3BAF9FB9961DC1B6FED54A58CDFAA3E465081EC86F89BFAB

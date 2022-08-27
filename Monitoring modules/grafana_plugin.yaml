@@ -1,0 +1,6 @@
+---
+- name: Install/update Grafana piechart panel plugin
+  grafana_plugin:
+    name: grafana-piechart-panel
+    version: latest
+    state: present
